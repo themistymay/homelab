@@ -11,7 +11,9 @@ services:
       - /mnt/nas-01/Applications/gitlab/logs:/var/log/gitlab
       - /mnt/nas-01/Applications/gitlab/config:/etc/gitlab
     environment:
-      GITLAB_OMNIBUS_CONFIG: "from_file('/configs/gitlab_omnibus_config.rb')"
+    #   GITLAB_OMNIBUS_CONFIG: "from_file('/configs/gitlab_omnibus_config.rb')"
+      GITLAB_OMNIBUS_CONFIG: |
+        lfs_enabled true
     # configs:
     #   - source: gitlab
     #     target: /omnibus_config.rb
