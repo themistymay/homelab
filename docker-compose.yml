@@ -15,6 +15,9 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         external_url 'https://home.mikemay.io'
         gitlab_rails['lfs_enabled'] = true
+        nginx['redirect_http_to_https'] = true
+        nginx['redirect_http_to_https_port'] = 80
+        nginx['custom_gitlab_server_config'] = "location /.well-known/acme-challenge/ {\n root /var/opt/gitlab/nginx/www/; \n}\n"
     # configs:
     #   - source: gitlab
     #     target: /omnibus_config.rb
