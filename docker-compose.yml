@@ -21,6 +21,8 @@ services:
     #   - gitlab_root_password
   gitlab-runner:
     image: gitlab/gitlab-runner:alpine
+    volumes:
+    - ./configs/gitlab_runner_config.toml:/etc/gitlab-runner/config.toml
     deploy:
       mode: replicated
       replicas: 4
