@@ -13,7 +13,7 @@ services:
     environment:
     #   GITLAB_OMNIBUS_CONFIG: "from_file('/configs/gitlab_omnibus_config.rb')"
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.mayday.tld'
+        external_url 'https://home.mikemay.io'
         gitlab_rails['lfs_enabled'] = true
     # configs:
     #   - source: gitlab
