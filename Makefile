@@ -1,5 +1,11 @@
 .PHONY: save-realm
 
+clean:
+	-docker-compose kill
+	-docker-compose rm -f
+	-docker volume rm homelab_data-mattermost
+	-docker volume rm homelab_data-postgres
+
 save-realm:
 	docker exec -it homelab_keycloak_1 timeout 30s \
 		/opt/jboss/keycloak/bin/standalone.sh \

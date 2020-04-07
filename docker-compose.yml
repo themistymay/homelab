@@ -31,7 +31,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
-      - "/mnt/data/postgres/db:/var/lib/postgresql/data"
+      - "data-postgres:/var/lib/postgresql/data"
       - "./assets/postgres/init-scripts:/docker-entrypoint-initdb.d"
     expose:
       - "5432"
@@ -46,12 +46,14 @@ services:
     networks:
       - homelab
     hostname: keycloak
+    expose:
+      - "8080"
     depends_on: 
       - postgres
     environment:
       KEYCLOAK_IMPORT: /tmp/realm-mikemay-io.json
       SERVICE_NAME: keycloak
-      KEYCLOAK_FRONTEND_URL: https://sso.mikemay.io/auth
+      KEYCLOAK_FRONTEND_URL: https://sso.${DOMAIN_NAME}/auth
       KEYCLOAK_USER: keycloak
       KEYCLOAK_PASSWORD: keycloak
       DB_VENDOR: postgres
@@ -62,8 +64,6 @@ services:
       DB_PASSWORD: keycloak
     volumes:
       - "./assets/keycloak/realm-mikemay-io.json:/tmp/realm-mikemay-io.json"
-    expose:
-      - "8080"
   
   prometheus:
     depends_on: 
@@ -82,8 +82,9 @@ services:
     image: timescale/prometheus-postgresql-adapter:latest
     networks:
       - homelab
-    ports: 
-      - "9201:9201"
+    hostname: prometheus_postgresql_adapter
+    expose: 
+      - "9201"
     command: ['-pg-host=postgres', '-pg-password=password', '-pg-prometheus-log-samples']
 
   telegraf:
@@ -92,6 +93,7 @@ services:
     image: telegraf:1.14
     networks: 
       - homelab
+    hostname: telegraf
     volumes:
       - "./configs/telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro"
       - "/proc:/host/proc:ro"
@@ -112,10 +114,9 @@ services:
     image: grafana/grafana
     networks: 
       - homelab
+    hostname: grafana
     expose: 
       - "3000"
-    ports:
-      - "3000:3000"
     volumes:
       - "./configs/grafana/grafana.ini:/etc/grafana/grafana.ini"
       - "./assets/grafana/dashboards:/var/lib/grafana/dashboards"
@@ -131,28 +132,29 @@ services:
         - edition=team
     networks: 
       - homelab
+    hostname: mattermost
     expose: 
       - "8000"
     volumes:
+      - data-mattermost:/mattermost:rw
       - ./configs/mattermost/config.json:/mattermost/config/config.json:rw
-      - /mnt/data/mattermost/data:/mattermost/data:rw
-      - /mnt/data/mattermost/logs:/mattermost/logs:rw
-      - /mnt/data/mattermost/plugins:/mattermost/plugins:rw
-      - /mnt/data/mattermost/client-plugins:/mattermost/client/plugins:rw
       - /etc/localtime:/etc/localtime:ro
       - "./assets/global/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt"
     environment:
-      # set same as db credentials and dbname
-      MM_USERNAME: mattermost
-      MM_PASSWORD: mattermost
-      MM_DBNAME: mattermost
       DB_HOST: postgres
       DB_PORT: 5432
+      MM_DBNAME: mattermost
+      MM_USERNAME: mattermost
+      MM_PASSWORD: mattermost
       SERVICE_NAME: mattermost
   
 networks:
   homelab:
     driver: bridge
+
+volumes:
+  data-postgres:
+  data-mattermost:
 
 secrets:
   keycloak_db_password:
