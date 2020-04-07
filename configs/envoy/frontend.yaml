@@ -63,15 +63,6 @@ static_resources:
           route_config:
             name: local_route
             virtual_hosts:
-            - name: rocketchat
-              require_tls: EXTERNAL_ONLY
-              domains:
-              - "chat.*"
-              routes:
-              - match:
-                  prefix: "/"
-                route:
-                  cluster: rocketchat
             - name: keycloak
               require_tls: EXTERNAL_ONLY
               domains:
@@ -90,6 +81,16 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: grafana
+            - name: mattermost
+              require_tls: EXTERNAL_ONLY
+              domains:
+              - "chat.*"
+              - "mattermost.*"
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: mattermost
           http_filters:
           - name: envoy.router
             config: {}
@@ -146,6 +147,20 @@ static_resources:
               socket_address:
                 address: grafana
                 port_value: 3000
+  - name: mattermost
+    connect_timeout: 1.0s
+    type: strict_dns
+    lb_policy: round_robin
+    # http2_protocol_options: {}
+    load_assignment:
+      cluster_name: mattermost
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: mattermost
+                port_value: 8000
 admin:
   access_log_path: "/dev/null"
   address:

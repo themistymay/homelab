@@ -32,6 +32,7 @@ services:
       POSTGRES_DB: postgres
     volumes:
       - "/mnt/data/postgres/db:/var/lib/postgresql/data"
+      - "./assets/postgres/init-scripts:/docker-entrypoint-initdb.d"
     expose:
       - "5432"
     healthcheck:
@@ -56,9 +57,9 @@ services:
       DB_VENDOR: postgres
       DB_ADDR: postgres
       DB_PORT: 5432
-      DB_DATABASE: postgres
-      DB_USER: postgres
-      DB_PASSWORD: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
     volumes:
       - "./assets/keycloak/realm-mikemay-io.json:/tmp/realm-mikemay-io.json"
     expose:
@@ -123,6 +124,36 @@ services:
     environment: 
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,monasca-datasource,grafana-kubernetes-app
   
+  mattermost:
+    build:
+      context: contexts/mattermost
+      args:
+        - edition=team
+    networks: 
+      - homelab
+    expose: 
+      - "8000"
+    volumes:
+      - ./configs/mattermost/config.json:/mattermost/config/config.json:rw
+      - /mnt/data/mattermost/data:/mattermost/data:rw
+      - /mnt/data/mattermost/logs:/mattermost/logs:rw
+      - /mnt/data/mattermost/plugins:/mattermost/plugins:rw
+      - /mnt/data/mattermost/client-plugins:/mattermost/client/plugins:rw
+      - /etc/localtime:/etc/localtime:ro
+      - "./assets/global/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt"
+    environment:
+      # set same as db credentials and dbname
+      MM_USERNAME: mattermost
+      MM_PASSWORD: mattermost
+      MM_DBNAME: mattermost
+      DB_HOST: postgres
+      DB_PORT: 5432
+      SERVICE_NAME: mattermost
+  
 networks:
   homelab:
     driver: bridge
+
+secrets:
+  keycloak_db_password:
+    file: ./keycloak_db_password.txt
