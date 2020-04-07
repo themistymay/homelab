@@ -8,8 +8,8 @@ services:
     hostname: envoy
     volumes:
       - ./configs/envoy/frontend.yaml:/etc/envoy/envoy.yaml
-      - ./assets/envoy/mikemay-io.crt:/etc/mikemay-io.crt
-      - ./assets/envoy/mikemay-io.key:/etc/mikemay-io.key
+      - ./assets/global/mikemay-io.crt:/etc/mikemay-io.crt
+      - ./assets/global/mikemay-io.key:/etc/mikemay-io.key
     expose:
       - "80"
       - "443"
@@ -119,7 +119,7 @@ services:
       - "./configs/grafana/grafana.ini:/etc/grafana/grafana.ini"
       - "./assets/grafana/dashboards:/var/lib/grafana/dashboards"
       - "./assets/grafana/provisioning:/etc/grafana/provisioning"
-      - "./assets/envoy/mikemay-io.crt:/etc/ssl/certs/ca-certificates.crt"
+      - "./assets/global/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt"
     environment: 
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,monasca-datasource,grafana-kubernetes-app
   
