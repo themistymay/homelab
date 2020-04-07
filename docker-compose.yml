@@ -88,7 +88,7 @@ services:
   telegraf:
     depends_on: 
       - prometheus
-    image: telegraf:alpine
+    image: telegraf:1.14
     networks: 
       - homelab
     volumes:
