@@ -18,7 +18,12 @@ repo one appended.
 * make
 
 ## Running
-* `docker-compose up -d`
+* `make run`
+
+## Clean up
+* `make clean`: cleans up docker containers
+* `make clean-data`: everything in clean + remove docker volumes
+* `make clean-all`: everything in clean-data + removes certificates
 
 ## Descriptions
 * `assets`: files needed in support of an application that is not a core configuration file

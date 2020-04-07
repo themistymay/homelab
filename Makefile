@@ -10,8 +10,13 @@ debug:
 clean:
 	-docker-compose kill
 	-docker-compose rm -f
+
+clean-data: clean
 	-docker volume rm homelab_data-mattermost
 	-docker volume rm homelab_data-postgres
+
+clean-all: clean-data
+	-rm -f assets/global/*.crt assets/global/*.key
 
 gen-cert:
 ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
@@ -37,4 +42,4 @@ save-realm:
 		-Dkeycloak.migration.file=/tmp/realm-${REALM_NAME}.json
 	docker cp homelab_keycloak_1:/tmp/realm-${REALM_NAME}.json ./assets/keycloak/realm-${REALM_NAME}.json
 
-.PHONY: run debug clean gen-cert save-realm
+.PHONY: run debug clean clean-data clean-all gen-cert save-realm
