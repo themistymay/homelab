@@ -25,8 +25,6 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 		-days 3650
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
 	cat ./assets/global/${REALM_NAME}.crt >> ./assets/global/ca-certificates.crt
-else
-	echo "else"
 endif
 
 save-realm:
