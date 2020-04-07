@@ -66,6 +66,7 @@ static_resources:
             - name: keycloak
               require_tls: EXTERNAL_ONLY
               domains:
+              - "www.*"
               - "sso.*"
               routes:
               - match:
