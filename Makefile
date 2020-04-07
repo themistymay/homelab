@@ -1,4 +1,4 @@
-.PHONY: clean all save-realm
+.PHONY: save-realm
 
 save-realm:
 	docker exec -it homelab_keycloak_1 /opt/jboss/keycloak/bin/standalone.sh \
@@ -6,5 +6,6 @@ save-realm:
 		-Dkeycloak.migration.provider=singleFile \
 		-Dkeycloak.migration.realmName=mikemay-io \
 		-Dkeycloak.migration.usersExportStrategy=REALM_FILE \
-		-Dkeycloak.migration.file=/tmp/realm-mikemay-io.json
+		-Dkeycloak.migration.file=/tmp/realm-mikemay-io.json \
+		&& exit
 	docker cp homelab_keycloak_1:/tmp/realm-mikemay-io.json ./assets/keycloak/realm-mikemay-io.json
