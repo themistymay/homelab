@@ -5,3 +5,6 @@
 # No logs
 logs/
 *.log
+
+# No password files
+*.password.txt

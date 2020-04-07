@@ -55,7 +55,7 @@ services:
       SERVICE_NAME: keycloak
       KEYCLOAK_FRONTEND_URL: https://sso.${DOMAIN_NAME}/auth
       KEYCLOAK_USER: keycloak
-      KEYCLOAK_PASSWORD: keycloak
+      KEYCLOAK_PASSWORD_FILE: /run/secrets/keycloak_admin_password
       DB_VENDOR: postgres
       DB_ADDR: postgres
       DB_PORT: 5432
@@ -64,6 +64,8 @@ services:
       DB_PASSWORD: keycloak
     volumes:
       - "./assets/keycloak/realm-${REALM_NAME}.json:/tmp/realm-${REALM_NAME}.json"
+    secrets:
+      - keycloak_admin_password
   
   prometheus:
     depends_on: 
@@ -157,5 +159,5 @@ volumes:
   data-mattermost:
 
 secrets:
-  keycloak_db_password:
-    file: ./keycloak_db_password.txt
+  keycloak_admin_password:
+    file: ./password_files/keycloak.admin.password.txt

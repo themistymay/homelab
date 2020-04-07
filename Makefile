@@ -1,7 +1,7 @@
 include .env
 export
 
-run: gen-cert
+run: gen-cert gen-secrets
 	docker-compose up -d
 
 debug:
@@ -17,6 +17,7 @@ clean-data: clean
 
 clean-all: clean-data
 	-rm -f assets/global/*.crt assets/global/*.key
+	-rm -rf password_files
 
 gen-cert:
 ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
@@ -32,6 +33,12 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 	cat ./assets/global/${REALM_NAME}.crt >> ./assets/global/ca-certificates.crt
 endif
 
+gen-secrets:
+ifeq ("$(wildcard ./password_files)","")
+	mkdir password_files
+	openssl rand -base64 32 > password_files/keycloak.admin.password.txt
+endif
+
 save-realm:
 	docker exec -it homelab_keycloak_1 timeout 30s \
 		/opt/jboss/keycloak/bin/standalone.sh \
@@ -42,4 +49,4 @@ save-realm:
 		-Dkeycloak.migration.file=/tmp/realm-${REALM_NAME}.json
 	docker cp homelab_keycloak_1:/tmp/realm-${REALM_NAME}.json ./assets/keycloak/realm-${REALM_NAME}.json
 
-.PHONY: run debug clean clean-data clean-all gen-cert save-realm
+.PHONY: run debug clean clean-data clean-all gen-cert gen-secrets save-realm
