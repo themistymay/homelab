@@ -8,8 +8,8 @@ services:
     hostname: envoy
     volumes:
       - ./configs/envoy/frontend.yaml:/etc/envoy/envoy.yaml
-      - ./assets/global/mikemay-io.crt:/etc/mikemay-io.crt
-      - ./assets/global/mikemay-io.key:/etc/mikemay-io.key
+      - ./assets/global/${REALM_NAME}.crt:/etc/${REALM_NAME}.crt
+      - ./assets/global/${REALM_NAME}.key:/etc/${REALM_NAME}.key
     expose:
       - "80"
       - "443"
@@ -51,7 +51,7 @@ services:
     depends_on: 
       - postgres
     environment:
-      KEYCLOAK_IMPORT: /tmp/realm-mikemay-io.json
+      KEYCLOAK_IMPORT: /tmp/realm-${REALM_NAME}.json
       SERVICE_NAME: keycloak
       KEYCLOAK_FRONTEND_URL: https://sso.${DOMAIN_NAME}/auth
       KEYCLOAK_USER: keycloak
@@ -63,7 +63,7 @@ services:
       DB_USER: keycloak
       DB_PASSWORD: keycloak
     volumes:
-      - "./assets/keycloak/realm-mikemay-io.json:/tmp/realm-mikemay-io.json"
+      - "./assets/keycloak/realm-${REALM_NAME}.json:/tmp/realm-${REALM_NAME}.json"
   
   prometheus:
     depends_on: 

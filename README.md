@@ -7,6 +7,11 @@ DNS for hosts needs to resolve the domain name and the following subdomain names
 * chat.
 * grafana.
 
+### Certificates
+Envoy enforces certificates be in place and each service using Keycloak then requires that certificate to be trusted.
+Included in the repo is the cert and private key being used for TLS but also a ca-certificate with public CAs with 
+repo one appended.
+
 ## Prerequisites 
 * Docker
 * Docker Compose

@@ -1,0 +1,7 @@
+# No certs
+*.crt
+*.key
+
+# No logs
+logs/
+*.log
