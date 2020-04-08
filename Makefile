@@ -34,14 +34,14 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 		-out ./assets/global/${REALM_NAME}.crt \
 		-subj "/C=US/ST=VA/L=NoVA/O=${ORG_NAME}/CN=*.${DOMAIN_NAME}" \
 		-days 3650
-	echo $(ID)
+
 ifeq ($(ID),ubuntu)
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
-else ifeq (${ID},centos)
+else
 	cp /etc/ssl/certs/ca-bundle.crt ./assets/global/ca-certificates.crt
 	# openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
-	# rm -f ./assets/global/ca-certificates.pem
 endif
+
 	cat ./assets/global/${REALM_NAME}.crt >> ./assets/global/ca-certificates.crt
 endif
 
