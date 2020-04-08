@@ -37,8 +37,8 @@ RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
     && adduser -D -u ${PUID} -G mattermost -h /mattermost -D mattermost \
     && chown -R mattermost:mattermost /mattermost /config.json.save /mattermost/plugins /mattermost/client/plugins \
     && setcap cap_net_bind_service=+ep /mattermost/bin/mattermost \
-		&& rm -rf /mattermost/prepackaged_plugins/mattermost-plugin-aws* \
-		&& rm -rf /mattermost/prepackaged_plugins/mattermost-plugin-nps*
+    && rm -rf /mattermost/prepackaged_plugins/mattermost-plugin-aws* \
+    && rm -rf /mattermost/prepackaged_plugins/mattermost-plugin-nps*
 
 USER mattermost
 

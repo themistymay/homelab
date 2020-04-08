@@ -2,6 +2,7 @@ include .env
 export
 
 run: gen-cert gen-secrets
+	docker-compose build
 	docker-compose up -d
 
 debug:
