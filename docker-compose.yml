@@ -127,6 +127,8 @@ services:
     environment: 
       GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,monasca-datasource,grafana-kubernetes-app
       GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
+    secrets:
+      - grafana_admin_password
   
   mattermost:
     build:
