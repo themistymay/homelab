@@ -38,9 +38,9 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 ifeq ($(ID),ubuntu)
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
 else ifeq (${ID},centos)
-	cp /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ./assets/global/ca-certificates.pem
-	openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
-	rm -f ./assets/global/ca-certificates.pem
+	cp /etc/ssl/certs/ca-bundle.crt ./assets/global/ca-certificates.crt
+	# openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
+	# rm -f ./assets/global/ca-certificates.pem
 endif
 	cat ./assets/global/${REALM_NAME}.crt >> ./assets/global/ca-certificates.crt
 endif
