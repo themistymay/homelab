@@ -92,6 +92,15 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: mattermost
+            - name: prometheus
+              require_tls: EXTERNAL_ONLY
+              domains:
+              - "prometheus.*"
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: prometheus
           http_filters:
           - name: envoy.router
             config: {}
@@ -162,6 +171,20 @@ static_resources:
               socket_address:
                 address: mattermost
                 port_value: 8000
+  - name: prometheus
+    connect_timeout: 1.0s
+    type: strict_dns
+    lb_policy: round_robin
+    # http2_protocol_options: {}
+    load_assignment:
+      cluster_name: prometheus
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: prometheus
+                port_value: 9090
 admin:
   access_log_path: "/dev/null"
   address:
