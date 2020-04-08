@@ -35,9 +35,9 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 		-subj "/C=US/ST=VA/L=NoVA/O=${ORG_NAME}/CN=*.${DOMAIN_NAME}" \
 		-days 3650
 
-ifeq ("$(wildcard /etc/ssl/certs/ca-certificates.crt)","")
+ifneq ("$(wildcard /etc/ssl/certs/ca-certificates.crt)","")
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
-else ifeq ("$(wildcard /etc/ssl/certs/ca-bundle.crt)","")
+else ifneq ("$(wildcard /etc/ssl/certs/ca-bundle.crt)","")
 	cp /etc/ssl/certs/ca-bundle.crt ./assets/global/ca-certificates.crt
 	# openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
 endif
