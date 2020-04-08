@@ -30,7 +30,7 @@ Envoy enforces certificates be in place and each service using Keycloak then req
 * `assets`: files needed in support of an application that is not a core configuration file
 * `configs`: files that provide core configuration for a service
 * `context`: docker build contexts used for building container images if not pulling directly from a registry
-* `password_files`: get generated 
+* `password_files`: get generated and contains the passwords generated for service accounts
 * `.env`: environment file with environment specific details
 
 ## Know Issues
