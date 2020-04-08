@@ -1,9 +1,13 @@
 include .env
 export
 
+include /etc/os-release
+export
+
 run: gen-cert gen-secrets
 	docker-compose build
 	docker-compose up -d
+	sleep 5 && docker-compose up -d
 
 debug:
 	docker-compose up
@@ -21,13 +25,6 @@ clean-all: clean-data
 	-rm -rf password_files
 
 gen-cert:
-ifneq ("$(wildcard /etc/os-release)","")
-	. /etc/os-release
-	OS=${ID}
-else
-	OS=$(uname -s)
-endif
-
 ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 	openssl req \
 		-nodes \
@@ -37,9 +34,10 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 		-out ./assets/global/${REALM_NAME}.crt \
 		-subj "/C=US/ST=VA/L=NoVA/O=${ORG_NAME}/CN=*.${DOMAIN_NAME}" \
 		-days 3650
-ifneq ($(OS), "ubuntu")
+	echo $(ID)
+ifeq ($(ID),ubuntu)
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
-else
+else ifeq (${ID},centos)
 	cp /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ./assets/global/ca-certificates.pem
 	openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
 	rm -f ./assets/global/ca-certificates.pem

@@ -87,7 +87,7 @@ services:
     hostname: prometheus_postgresql_adapter
     expose: 
       - "9201"
-    command: ['-pg-host=postgres', '-pg-password=password', '-pg-prometheus-log-samples']
+    command: ['-pg-host=postgres', '-pg-user=prometheus', '-pg-password=prometheus', '-pg-prometheus-log-samples']
 
   telegraf:
     depends_on: 
