@@ -37,8 +37,8 @@ endif
 gen-secrets:
 ifeq ("$(wildcard ./password_files)","")
 	mkdir password_files
-	openssl rand -base64 32 > password_files/keycloak.admin.password.txt
 	openssl rand -base64 32 > password_files/grafana.admin.password.txt
+	openssl rand -base64 32 > password_files/keycloak.keycloak.password.txt
 endif
 
 save-realm:
