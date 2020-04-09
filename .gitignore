@@ -12,7 +12,22 @@ logs/
 # No password files
 *.password.txt
 
-# No letsencrypt
-letsencrypt/
+# Let's Encrypt
+letsencrypt/*
+!letsencrypt/etc/
+!letsencrypt/var/
+
+letsencrypt/etc/*
+!letsencrypt/etc/letsencrypt/
+
+letsencrypt/etc/letsencrypt/*
 !letsencrypt/etc/letsencrypt/cli.ini
-!letsencrypt/var/lib/.gitkeep
+
+letsencrypt/var/*
+!letsencrypt/var/lib/
+
+letsencrypt/var/lib/*
+!letsencrypt/var/lib/letsencrypt/
+
+letsencrypt/var/lib/letsencrypt/*
+!letsencrypt/var/lib/letsencrypt/.gitkeep
