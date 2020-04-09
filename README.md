@@ -19,6 +19,8 @@ Envoy enforces certificates be in place and each service using Keycloak then req
 * openssl
 
 ## Running
+* Create your .env file
+* If you are doing let's encrypt: `set -o allexport; source .env; set +o allexport; ./letsencryp.sh`
 * `make run`
 
 ## Clean up
@@ -31,7 +33,19 @@ Envoy enforces certificates be in place and each service using Keycloak then req
 * `configs`: files that provide core configuration for a service
 * `context`: docker build contexts used for building container images if not pulling directly from a registry
 * `password_files`: get generated and contains the passwords generated for service accounts
-* `.env`: environment file with environment specific details
 
 ## Know Issues
 * Certificate helpers will not work with MacOS because docker on Mac uses `docker-machine`.
+
+## .env structure
+```
+# Required
+DOMAIN_NAME=
+REALM_NAME=
+ORG_NAME=
+
+# Optional: to use letsencrypt dns-route53
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=
+```
