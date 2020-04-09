@@ -25,7 +25,13 @@ clean-all: clean-data
 	-rm -rf password_files
 
 gen-cert:
-ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
+# If we have a letencrypt cert, add that
+ifneq ("$(wildcard ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem)","")
+	cp ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem ./assets/global/${REALM_NAME}.key
+	cp ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/cert.pem ./assets/global/${REALM_NAME}.crt
+# If we dont have letsencrypt, check we already have a cert generated
+else ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
+	# Generate missing certificate
 	openssl req \
 		-nodes \
 		-x509 \
@@ -34,16 +40,16 @@ ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 		-out ./assets/global/${REALM_NAME}.crt \
 		-subj "/C=US/ST=VA/L=NoVA/O=${ORG_NAME}/CN=*.${DOMAIN_NAME}" \
 		-days 3650
+endif
 
+# Find the local cert store so that we can add our own
 ifneq ("$(wildcard /etc/ssl/certs/ca-certificates.crt)","")
 	cp /etc/ssl/certs/ca-certificates.crt ./assets/global/ca-certificates.crt
 else ifneq ("$(wildcard /etc/ssl/certs/ca-bundle.crt)","")
 	cp /etc/ssl/certs/ca-bundle.crt ./assets/global/ca-certificates.crt
 	# openssl x509 -outform der -in ./assets/global/ca-certificates.pem -out ./assets/global/ca-certificates.crt
 endif
-
 	cat ./assets/global/${REALM_NAME}.crt >> ./assets/global/ca-certificates.crt
-endif
 
 gen-secrets:
 ifeq ("$(wildcard ./password_files)","")
