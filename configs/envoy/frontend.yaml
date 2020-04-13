@@ -46,11 +46,9 @@ static_resources:
             - upgrade_type: websocket
           codec_type: auto
           stat_prefix: ingress_http
-          http2_protocol_options:
-            allow_connect: true
           use_remote_address: true
           skip_xff_append: false
-          xff_num_trusted_hops: 3
+          xff_num_trusted_hops: 2
           access_log:
             - name: envoy.file_access_log
               config:
@@ -115,25 +113,10 @@ static_resources:
               private_key:
                 filename: "/etc/mikemay-io.key"
   clusters:
-  - name: rocketchat
-    connect_timeout: 0.25s
-    type: strict_dns
-    lb_policy: round_robin
-    # http2_protocol_options: {}
-    load_assignment:
-      cluster_name: rocketchat
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: rocketchat
-                port_value: 80
   - name: keycloak
     connect_timeout: 0.25s
     type: strict_dns
     lb_policy: round_robin
-    # http2_protocol_options: {}
     load_assignment:
       cluster_name: keycloak
       endpoints:
@@ -147,7 +130,6 @@ static_resources:
     connect_timeout: 1.0s
     type: strict_dns
     lb_policy: round_robin
-    # http2_protocol_options: {}
     load_assignment:
       cluster_name: grafana
       endpoints:
@@ -161,7 +143,6 @@ static_resources:
     connect_timeout: 1.0s
     type: strict_dns
     lb_policy: round_robin
-    # http2_protocol_options: {}
     load_assignment:
       cluster_name: mattermost
       endpoints:
@@ -175,7 +156,6 @@ static_resources:
     connect_timeout: 1.0s
     type: strict_dns
     lb_policy: round_robin
-    # http2_protocol_options: {}
     load_assignment:
       cluster_name: prometheus
       endpoints:

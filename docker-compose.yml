@@ -153,6 +153,36 @@ services:
       MM_PASSWORD: mattermost
       SERVICE_NAME: mattermost
   
+  # freeipa:
+  #   image: freeipa/freeipa-server
+  #   networks: 
+  #     - homelab
+  #   hostname: ipa.${DOMAIN_NAME}
+  #   sysctls:
+  #     - net.ipv6.conf.all.disable_ipv6=0
+  #   volumes: 
+  #     - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #     - "data-ipa:/data:Z"
+  #   ports: 
+  #     - "8080:80"
+  #     - "8443:443"
+  #   tmpfs:
+  #     - /run
+  #     - /tmp
+  #   command: [
+  #     "exit-on-finished",
+  #     "-U",
+  #     "--realm=$DOMAIN_NAME",
+  #     "--domain=$DOMAIN_NAME",
+  #     "--ds-password=password",
+  #     "-a=password",
+  #     "-p=password",
+  #     "--mkhomedir",
+  #     "--setup-dns",
+  #     "--auto-forwarders",
+  #     "--forwarder=8.8.8.8"
+  #   ]
+  
 networks:
   homelab:
     driver: bridge

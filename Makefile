@@ -35,7 +35,7 @@ gen-cert:
 # If we have a letencrypt cert, add that
 ifneq ("$(wildcard ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem)","")
 	cp ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/privkey.pem ./assets/global/${REALM_NAME}.key
-	cp ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/cert.pem ./assets/global/${REALM_NAME}.crt
+	cp ./letsencrypt/etc/letsencrypt/live/${DOMAIN_NAME}/fullchain.pem ./assets/global/${REALM_NAME}.crt
 # If we dont have letsencrypt, check we already have a cert generated
 else ifeq ("$(wildcard ./assets/global/${REALM_NAME}.crt)","")
 	# Generate missing certificate
