@@ -23,6 +23,13 @@ clean-data: clean
 clean-all: clean-data
 	-rm -f assets/global/*.crt assets/global/*.key
 	-rm -rf password_files
+	-rm -rf letsencrypt/etc/letsencrypt/accounts
+	-rm -rf letsencrypt/etc/letsencrypt/archive
+	-rm -rf letsencrypt/etc/letsencrypt/csr
+	-rm -rf letsencrypt/etc/letsencrypt/keys
+	-rm -rf letsencrypt/etc/letsencrypt/live
+	-rm -rf letsencrypt/etc/letsencrypt/renewal
+	-rm -rf letsencrypt/etc/letsencrypt/renewal-hooks
 
 gen-cert:
 # If we have a letencrypt cert, add that

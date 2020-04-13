@@ -20,7 +20,7 @@ Envoy enforces certificates be in place and each service using Keycloak then req
 
 ## Running
 * Create your .env file
-* If you are doing let's encrypt: `set -o allexport; source .env; set +o allexport; ./letsencryp.sh`
+* If you are doing let's encrypt: `./letsencryp.sh`
 * `make run`
 
 ## Clean up
