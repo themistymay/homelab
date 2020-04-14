@@ -99,6 +99,15 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: prometheus
+            - name: gitlab
+              require_tls: EXTERNAL_ONLY
+              domains:
+              - "gitlab.*"
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: gitlab
           http_filters:
           - name: envoy.router
             config: {}
@@ -165,6 +174,19 @@ static_resources:
               socket_address:
                 address: prometheus
                 port_value: 9090
+  - name: gitlab
+    connect_timeout: 1.0s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: gitlab
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: gitlab
+                port_value: 80
 admin:
   access_log_path: "/dev/null"
   address:

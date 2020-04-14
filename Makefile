@@ -19,17 +19,20 @@ clean:
 clean-data: clean
 	-docker volume rm homelab_data-mattermost
 	-docker volume rm homelab_data-postgres
+	-docker volume rm homelab_data-gitlab
+	-docker volume rm homelab_config-gitlab
+	-docker volume rm homelab_logs-gitlab
 
 clean-all: clean-data
 	-rm -f assets/global/*.crt assets/global/*.key
 	-rm -rf password_files
-	-rm -rf letsencrypt/etc/letsencrypt/accounts
-	-rm -rf letsencrypt/etc/letsencrypt/archive
-	-rm -rf letsencrypt/etc/letsencrypt/csr
-	-rm -rf letsencrypt/etc/letsencrypt/keys
-	-rm -rf letsencrypt/etc/letsencrypt/live
-	-rm -rf letsencrypt/etc/letsencrypt/renewal
-	-rm -rf letsencrypt/etc/letsencrypt/renewal-hooks
+	# -rm -rf letsencrypt/etc/letsencrypt/accounts
+	# -rm -rf letsencrypt/etc/letsencrypt/archive
+	# -rm -rf letsencrypt/etc/letsencrypt/csr
+	# -rm -rf letsencrypt/etc/letsencrypt/keys
+	# -rm -rf letsencrypt/etc/letsencrypt/live
+	# -rm -rf letsencrypt/etc/letsencrypt/renewal
+	# -rm -rf letsencrypt/etc/letsencrypt/renewal-hooks
 
 gen-cert:
 # If we have a letencrypt cert, add that
@@ -61,8 +64,9 @@ endif
 gen-secrets:
 ifeq ("$(wildcard ./password_files)","")
 	mkdir password_files
-	openssl rand -base64 32 > password_files/grafana.admin.password.txt
-	openssl rand -base64 32 > password_files/keycloak.keycloak.password.txt
+	openssl rand -base64 32 > password_files/grafana_admin_password.txt
+	openssl rand -base64 32 > password_files/keycloak_keycloak_password.txt
+	openssl rand -base64 32 > password_files/gitlab_root_password.txt
 endif
 
 save-realm:

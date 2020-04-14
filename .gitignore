@@ -10,7 +10,7 @@ logs/
 *.log
 
 # No password files
-*.password.txt
+*_password.txt
 
 # Let's Encrypt
 letsencrypt/*

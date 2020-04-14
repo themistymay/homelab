@@ -153,6 +153,41 @@ services:
       MM_PASSWORD: mattermost
       SERVICE_NAME: mattermost
   
+  gitlab:
+    image: gitlab/gitlab-ce:12.9.2-ce.0
+    networks: 
+      - homelab
+    hostname: gitlab.${DOMAIN_NAME}
+    expose: 
+      - "22"
+      - "80"
+      - "443"
+      - "9100"
+      - "9121"
+      - "9168"
+      - "9187"
+      - "9229"
+      - "9236"
+    volumes: 
+      - "config-gitlab:/etc/gitlab"
+      - "logs-gitlab:/var/log/gitlab"
+      - "data-gitlab:/var/opt/gitlab"
+      - "./configs/gitlab/gitlab.rb:/omnibus_config.rb"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
+    secrets:
+      - gitlab_root_password
+
+      # sudo docker run --detach \
+      # --hostname gitlab.example.com \
+      # --publish 443:443 --publish 80:80 --publish 22:22 \
+      # --name gitlab \
+      # --restart always \
+      # --volume $GITLAB_HOME/gitlab/config:/etc/gitlab \
+      # --volume $GITLAB_HOME/gitlab/logs:/var/log/gitlab \
+      # --volume $GITLAB_HOME/gitlab/data:/var/opt/gitlab \
+      # gitlab/gitlab-ce:latest
+  
   # freeipa:
   #   image: freeipa/freeipa-server
   #   networks: 
@@ -190,9 +225,14 @@ networks:
 volumes:
   data-postgres:
   data-mattermost:
+  data-gitlab:
+  config-gitlab:
+  logs-gitlab:
 
 secrets:
   keycloak_keycloak_password:
-    file: ./password_files/keycloak.keycloak.password.txt
+    file: ./password_files/keycloak_keycloak_password.txt
   grafana_admin_password:
-    file: ./password_files/grafana.admin.password.txt
+    file: ./password_files/grafana_admin_password.txt
+  gitlab_root_password:
+    file: ./password_files/gitlab_root_password.txt
