@@ -178,6 +178,85 @@ services:
       GITLAB_OMNIBUS_CONFIG: "from_file('/omnibus_config.rb')"
     secrets:
       - gitlab_root_password
+  
+  rocketchat:
+    build:
+      context: contexts/rocketchat
+    networks: 
+      - homelab
+    hostname: rocketchat.${DOMAIN_NAME}
+    expose:
+      - "4000"
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          node main.js &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    restart: unless-stopped
+    volumes:
+      - data-rocketchat:/app/uploads
+    environment:
+      - PORT=4000
+      - ROOT_URL=http://localhost:4000
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - MAIL_URL=smtp://smtp.email
+    depends_on:
+      - envoy-frontend
+      - mongo
+      - mongo-init-replica
+  
+  mongo:
+    image: mongo:4.0
+    networks: 
+      - homelab
+    expose:
+      - "27017"
+    restart: unless-stopped
+    volumes:
+      - data-mongodb:/data/db
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+  
+  mongo-init-replica:
+    image: mongo:4.0
+    networks: 
+      - homelab
+    command: >
+      bash -c
+        "for i in `seq 1 30`; do
+          mongo mongo/rocketchat --eval \"
+            rs.initiate({
+              _id: 'rs0',
+              members: [ { _id: 0, host: 'localhost:27017' } ]})\" &&
+          s=$$? && break || s=$$?;
+          echo \"Tried $$i times. Waiting 5 secs...\";
+          sleep 5;
+        done; (exit $$s)"
+    depends_on:
+      - mongo
+  
+#   # hubot, the popular chatbot (add the bot user first and change the password before starting this image)
+#   hubot:
+#     image: rocketchat/hubot-rocketchat:latest
+#     restart: unless-stopped
+#     environment:
+#       - ROCKETCHAT_URL=rocketchat:3000
+#       - ROCKETCHAT_ROOM=GENERAL
+#       - ROCKETCHAT_USER=bot
+#       - ROCKETCHAT_PASSWORD=botpassword
+#       - BOT_NAME=bot
+#   # you can add more scripts as you'd like here, they need to be installable by npm
+#       - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics
+#     depends_on:
+#       - rocketchat
+#     volumes:
+#       - ./assets/hubot/scripts:/home/hubot/scripts
+#   # this is used to expose the hubot port for notifications on the host on port 4001, e.g. for hubot-jenkins-notifier
+#     ports:
+#       - 4001:8080
 
   # freeipa:
   #   image: freeipa/freeipa-server
@@ -217,6 +296,8 @@ volumes:
   data-postgres:
   data-mattermost:
   data-gitlab:
+  data-rocketchat:
+  data-mongodb:
   config-gitlab:
   logs-gitlab:
 

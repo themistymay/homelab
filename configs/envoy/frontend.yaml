@@ -90,6 +90,15 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: mattermost
+            - name: rocketchat
+              require_tls: EXTERNAL_ONLY
+              domains:
+              - "rocketchat.*"
+              routes:
+              - match:
+                  prefix: "/"
+                route:
+                  cluster: rocketchat
             - name: prometheus
               require_tls: EXTERNAL_ONLY
               domains:
@@ -161,6 +170,19 @@ static_resources:
               socket_address:
                 address: mattermost
                 port_value: 8000
+  - name:  rocketchat
+    connect_timeout: 1.0s
+    type: strict_dns
+    lb_policy: round_robin
+    load_assignment:
+      cluster_name: rocketchat
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: rocketchat
+                port_value: 4000
   - name: prometheus
     connect_timeout: 1.0s
     type: strict_dns
